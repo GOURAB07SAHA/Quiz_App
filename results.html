@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster | Quiz Results</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="assets/quiz-logo.png" alt="QuizMaster Logo" class="logo">
+            <span>QuizMaster</span>
+        </div>
+        <div class="navbar-search">
+            <input type="text" placeholder="Search quizzes...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="navbar-user">
+            <div class="user-dropdown">
+                <img src="assets/user-avatar.png" alt="User Avatar" class="user-avatar">
+                <span>John Doe</span>
+                <i class="fas fa-chevron-down"></i>
+                <div class="dropdown-menu">
+                    <a href="#"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> My Quizzes</a></li>
+                <li><a href="create-quiz.html"><i class="fas fa-plus-circle"></i> Create Quiz</a></li>
+                <li class="active"><a href="#"><i class="fas fa-chart-bar"></i> Results</a></li>
+                <li><a href="#"><i class="fas fa-trophy"></i> Leaderboard</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="results-header">
+                <h1>Quiz Results</h1>
+                <p>Review your performance and see how you did</p>
+            </div>
+
+            <div class="quiz-result-summary">
+                <div class="result-card main-result">
+                    <h2>General Science Challenge</h2>
+                    <div class="result-score">
+                        <div class="score-circle">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring-circle" stroke="#4361ee" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <span class="score-percent">85%</span>
+                        </div>
+                        <div class="score-details">
+                            <p><strong>12</strong> out of <strong>15</strong> correct</p>
+                            <p>Time taken: <strong>8:24</strong></p>
+                            <p>Rank: <strong>Top 15%</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-cards">
+                    <div class="result-card">
+                        <h3>Performance</h3>
+                        <div class="result-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-check-circle" style="color: #4cc9f0;"></i>
+                                <span>12 Correct</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-times-circle" style="color: #f72585;"></i>
+                                <span>3 Wrong</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-clock" style="color: #f8961e;"></i>
+                                <span>8:24 Time</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Category Ranking</h3>
+                        <div class="ranking-info">
+                            <div class="rank-badge">
+                                <i class="fas fa-trophy" style="color: gold;"></i>
+                                <span>#24</span>
+                            </div>
+                            <p>Out of 215 participants in Science category</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detailed-results">
+                <h2>Question Review</h2>
+                <div class="questions-review">
+                    <div class="question-result correct">
+                        <div class="question-header">
+                            <span class="status-badge correct"><i class="fas fa-check"></i></span>
+                            <h3>What is the chemical symbol for gold?</h3>
+                        </div>
+                        <div class="question-options">
+                            <div class="option correct">
+                                <span>Au</span>
+                                <span class="option-status">Your answer</span>
+                            </div>
+                            <div class="option">
+                                <span>Ag</span>
+                            </div>
+                            <div class="option">
+                                <span>Fe</span>
+                            </div>
+                            <div class="option">
+                                <span>Pb</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-result incorrect">
+                        <div class="question-header">
+                            <span class="status-badge incorrect"><i class="fas fa-times"></i></span>
+                            <h3>Which planet is closest to the sun?</h3>
+                        </div>
+                        <div class="question-options">
+                            <div class="option incorrect">
+                                <span>Venus</span>
+                                <span class="option-status">Your answer</span>
+                            </div>
+                            <div class="option correct-answer">
+                                <span>Mercury</span>
+                                <span class="option-status">Correct answer</span>
+                            </div>
+                            <div class="option">
+                                <span>Mars</span>
+                            </div>
+                            <div class="option">
+                                <span>Earth</span>
+                            </div>
+                        </div>
+                        <div class="explanation">
+                            <h4>Explanation:</h4>
+                            <p>Mercury is the smallest and innermost planet in the Solar System, orbiting closest to the Sun.</p>
+                        </div>
+                    </div>
+
+                    <div class="question-result correct">
+                        <div class="question-header">
+                            <span class="status-badge correct"><i class="fas fa-check"></i></span>
+                            <h3>What is the powerhouse of the cell?</h3>
+                        </div>
+                        <div class="question-options">
+                            <div class="option">
+                                <span>Nucleus</span>
+                            </div>
+                            <div class="option correct">
+                                <span>Mitochondria</span>
+                                <span class="option-status">Your answer</span>
+                            </div>
+                            <div class="option">
+                                <span>Ribosome</span>
+                            </div>
+                            <div class="option">
+                                <span>Endoplasmic reticulum</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-actions">
+                <button class="btn btn-primary">
+                    <i class="fas fa-share-alt"></i> Share Results
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-redo"></i> Retake Quiz
+                </button>
+                <button class="btn btn-outline" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-home"></i> Back to Dashboard
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Animate the progress ring
+        document.addEventListener('DOMContentLoaded', () => {
+            const circle = document.querySelector('.progress-ring-circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = circumference;
+            
+            // Set the progress (85% in this case)
+            const offset = circumference - (85 / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster | Take Quiz</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Additional styles for quiz functionality */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .quiz-question {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .quiz-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            background: white;
+            font-size: 16px;
+        }
+        
+        .quiz-option:hover {
+            border-color: #4361ee;
+            background: #f5f7ff;
+        }
+        
+        .quiz-option.selected {
+            border-color: #4361ee;
+            background: #f5f7ff;
+        }
+        
+        .quiz-option.correct {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #4361ee;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        #quiz-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="assets/quiz-logo.png" alt="QuizMaster Logo" class="logo">
+            <span>QuizMaster</span>
+        </div>
+        <div class="navbar-timer">
+            <i class="fas fa-clock"></i>
+            <span id="quiz-timer">10:00</span>
+        </div>
+        <div class="navbar-user">
+            <div class="user-dropdown">
+                <img src="assets/user-avatar.png" alt="User Avatar" class="user-avatar">
+                <span id="username-display">Guest</span>
+                <i class="fas fa-chevron-down"></i>
+                <div class="dropdown-menu">
+                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="quiz-info-card">
+                <h3 id="quiz-title-display">General Science Challenge</h3>
+                <div class="quiz-meta">
+                    <p><i class="fas fa-question-circle"></i> <span id="total-questions">0</span> Questions</p>
+                    <p><i class="fas fa-clock"></i> <span id="time-limit">10</span> min</p>
+                </div>
+                <div class="quiz-progress">
+                    <div class="progress-container">
+                        <div class="progress-bar" id="quiz-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <span id="progress-text">0/0</span>
+                </div>
+                <div id="question-palette" class="question-palette">
+                    <!-- Question numbers will be added here by JavaScript -->
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div id="quiz-container" class="quiz-container">
+                <div class="quiz-header">
+                    <h2>Loading Quiz...</h2>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Quiz data - in a real app, this would come from a database
+        const quizData = {
+            id: "science-quiz-1",
+            title: "General Science Challenge",
+            description: "Test your knowledge of basic science concepts",
+            category: "Science",
+            timeLimit: 10, // in minutes
+            image: "assets/quiz-science.jpg",
+            questions: [
+                {
+                    id: 1,
+                    text: "What is the chemical symbol for gold?",
+                    options: [
+                        { id: 1, text: "Au", isCorrect: true },
+                        { id: 2, text: "Ag", isCorrect: false },
+                        { id: 3, text: "Fe", isCorrect: false },
+                        { id: 4, text: "Pb", isCorrect: false }
+                    ],
+                    explanation: "The chemical symbol for gold is Au, from the Latin word 'aurum' meaning gold."
+                },
+                {
+                    id: 2,
+                    text: "Which planet is closest to the sun?",
+                    options: [
+                        { id: 1, text: "Venus", isCorrect: false },
+                        { id: 2, text: "Mercury", isCorrect: true },
+                        { id: 3, text: "Mars", isCorrect: false },
+                        { id: 4, text: "Earth", isCorrect: false }
+                    ],
+                    explanation: "Mercury is the smallest and innermost planet in the Solar System."
+                },
+                {
+                    id: 3,
+                    text: "What is the powerhouse of the cell?",
+                    options: [
+                        { id: 1, text: "Nucleus", isCorrect: false },
+                        { id: 2, text: "Mitochondria", isCorrect: true },
+                        { id: 3, text: "Ribosome", isCorrect: false },
+                        { id: 4, text: "Endoplasmic reticulum", isCorrect: false }
+                    ],
+                    explanation: "Mitochondria are known as the powerhouse of the cell because they generate most of the cell's supply of ATP."
+                }
+            ]
+        };
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let timeLeft = quizData.timeLimit * 60; // in seconds
+        let timerInterval;
+        let quizCompleted = false;
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const quizTitleDisplay = document.getElementById('quiz-title-display');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const timeLimitDisplay = document.getElementById('time-limit');
+        const quizTimerDisplay = document.getElementById('quiz-timer');
+        const progressBar = document.getElementById('quiz-progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const questionPalette = document.getElementById('question-palette');
+        const usernameDisplay = document.getElementById('username-display');
+
+        // Initialize the quiz
+        function initQuiz() {
+            // Set quiz info
+            quizTitleDisplay.textContent = quizData.title;
+            totalQuestionsDisplay.textContent = quizData.questions.length;
+            timeLimitDisplay.textContent = quizData.timeLimit;
+            
+            // Set username if available
+            const username = localStorage.getItem('userName') || 'Guest';
+            usernameDisplay.textContent = username;
+            
+            // Create question palette
+            createQuestionPalette();
+            
+            // Start timer
+            startTimer();
+            
+            // Load first question
+            loadQuestion(currentQuestionIndex);
+        }
+
+        // Create question number palette
+        function createQuestionPalette() {
+            quizData.questions.forEach((question, index) => {
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = index + 1;
+                questionNumber.addEventListener('click', () => navigateToQuestion(index));
+                questionPalette.appendChild(questionNumber);
+            });
+        }
+
+        // Load a question
+        function loadQuestion(index) {
+            if (index < 0 || index >= quizData.questions.length) return;
+            
+            currentQuestionIndex = index;
+            const question = quizData.questions[index];
+            
+            // Update progress
+            updateProgress();
+            
+            // Highlight current question in palette
+            highlightCurrentQuestion();
+            
+            // Create question HTML
+            let questionHTML = `
+                <div class="quiz-question">
+                    <div class="question-header">
+                        <h2>Question ${index + 1} of ${quizData.questions.length}</h2>
+                        ${quizData.image ? `<img src="${quizData.image}" id="quiz-image" alt="Quiz Image">` : ''}
+                        <p>${question.text}</p>
+                    </div>
+                    <div class="quiz-options">
+            `;
+            
+            // Add options
+            question.options.forEach(option => {
+                const isSelected = userAnswers[question.id] === option.id;
+                const selectedClass = isSelected ? 'selected' : '';
+                questionHTML += `
+                    <button class="quiz-option ${selectedClass}" 
+                            data-question-id="${question.id}" 
+                            data-option-id="${option.id}"
+                            onclick="selectOption(this, ${question.id}, ${option.id}, ${option.isCorrect})">
+                        ${option.text}
+                    </button>
+                `;
+            });
+            
+            questionHTML += `
+                    </div>
+                    <div class="quiz-navigation">
+                        <button class="btn btn-outline" onclick="prevQuestion()" ${index === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        ${index < quizData.questions.length - 1 ? `
+                            <button class="btn btn-primary" onclick="nextQuestion()">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        ` : `
+                            <button class="btn btn-success" onclick="submitQuiz()" id="submit-btn">
+                                <i class="fas fa-check-circle"></i> Submit Quiz
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            
+            quizContainer.innerHTML = questionHTML;
+        }
+
+        // Select an option
+        window.selectOption = (element, questionId, optionId, isCorrect) => {
+            // Remove selected class from all options in this question
+            const options = document.querySelectorAll(`.quiz-option[data-question-id="${questionId}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store user's answer
+            userAnswers[questionId] = optionId;
+            
+            // Update question palette
+            updateQuestionPalette(questionId, true);
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        // Navigate to specific question
+        function navigateToQuestion(index) {
+            loadQuestion(index);
+        }
+
+        // Highlight current question in palette
+        function highlightCurrentQuestion() {
+            const questionNumbers = document.querySelectorAll('.question-number');
+            questionNumbers.forEach((num, index) => {
+                num.classList.toggle('active', index === currentQuestionIndex);
+            });
+        }
+
+        // Update question palette indicator
+        function updateQuestionPalette(questionId, answered) {
+            const questionIndex = quizData.questions.findIndex(q => q.id === questionId);
+            if (questionIndex >= 0) {
+                const questionNumber = questionPalette.children[questionIndex];
+                questionNumber.classList.toggle('answered', answered);
+            }
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / quizData.questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${currentQuestionIndex + 1}/${quizData.questions.length}`;
+        }
+
+        // Start timer
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!quizCompleted) {
+                        submitQuiz();
+                    }
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            quizTimerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            
+            // Change color when time is running low
+            if (timeLeft <= 60) {
+                quizTimerDisplay.style.color = '#f44336';
+            }
+        }
+
+        // Submit quiz
+        window.submitQuiz = () => {
+            if (confirm("Are you sure you want to submit your quiz?")) {
+                quizCompleted = true;
+                clearInterval(timerInterval);
+                calculateScore();
+            }
+        }
+
+        // Calculate score
+        function calculateScore() {
+            let correctAnswers = 0;
+            
+            quizData.questions.forEach(question => {
+                const userAnswerId = userAnswers[question.id];
+                if (userAnswerId) {
+                    const selectedOption = question.options.find(opt => opt.id === userAnswerId);
+                    if (selectedOption && selectedOption.isCorrect) {
+                        correctAnswers++;
+                    }
+                }
+            });
+            
+            const scorePercentage = Math.round((correctAnswers / quizData.questions.length) * 100);
+            
+            // Display results
+            showResults(correctAnswers, scorePercentage);
+        }
+
+        // Show results
+        function showResults(correctAnswers, scorePercentage) {
+            let resultsHTML = `
+                <div class="quiz-results">
+                    <div class="result-header">
+                        <h2>Quiz Completed!</h2>
+                        <p>You scored ${correctAnswers} out of ${quizData.questions.length}</p>
+                        <div class="score-circle">
+                            <svg class="progress-ring" width="200" height="200">
+                                <circle class="progress-ring-circle-bg" stroke="#f0f0f0" stroke-width="10" fill="transparent" r="90" cx="100" cy="100"/>
+                                <circle class="progress-ring-circle" stroke="#4361ee" stroke-width="10" fill="transparent" r="90" cx="100" cy="100"/>
+                            </svg>
+                            <span class="score-percent">${scorePercentage}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-details">
+                        <h3>Question Review</h3>
+            `;
+            
+            // Add question review
+            quizData.questions.forEach((question, index) => {
+                const userAnswerId = userAnswers[question.id];
+                const isCorrect = userAnswerId ? 
+                    question.options.find(opt => opt.id === userAnswerId)?.isCorrect : false;
+                
+                resultsHTML += `
+                    <div class="question-review ${isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="question-header">
+                            <span class="status-badge ${isCorrect ? 'correct' : 'incorrect'}">
+                                <i class="fas fa-${isCorrect ? 'check' : 'times'}"></i>
+                            </span>
+                            <h4>Question ${index + 1}: ${question.text}</h4>
+                        </div>
+                        
+                        <div class="options-review">
+                `;
+                
+                question.options.forEach(option => {
+                    let optionClass = '';
+                    let statusText = '';
+                    
+                    if (option.id === userAnswerId) {
+                        optionClass = isCorrect ? 'user-correct' : 'user-incorrect';
+                        statusText = 'Your answer';
+                    } else if (option.isCorrect) {
+                        optionClass = 'correct-answer';
+                        statusText = 'Correct answer';
+                    }
+                    
+                    resultsHTML += `
+                        <div class="option ${optionClass}">
+                            <span>${option.text}</span>
+                            ${statusText ? `<span class="status-text">${statusText}</span>` : ''}
+                        </div>
+                    `;
+                });
+                
+                if (!isCorrect && question.explanation) {
+                    resultsHTML += `
+                        <div class="explanation">
+                            <p><strong>Explanation:</strong> ${question.explanation}</p>
+                        </div>
+                    `;
+                }
+                
+                resultsHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsHTML += `
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                            <i class="fas fa-home"></i> Back to Dashboard
+                        </button>
+                        <button class="btn btn-outline" onclick="window.location.href='results.html'">
+                            <i class="fas fa-chart-bar"></i> View Detailed Results
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            quizContainer.innerHTML = resultsHTML;
+            
+            // Animate the progress circle
+            const circle = document.querySelector('.progress-ring-circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = circumference;
+            
+            const offset = circumference - (scorePercentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+
+        // Initialize the quiz when page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
